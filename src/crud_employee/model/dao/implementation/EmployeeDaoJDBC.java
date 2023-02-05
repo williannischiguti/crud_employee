@@ -178,7 +178,27 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 
 	@Override
 	public void update(Employee emp) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement("UPDATE EMPLOYEE "
+									 + "SET NAME = ?, EMAIL = ?, BIRTHDATE = ?, BASESALARY = ?, DEPARTMENTID = ? " 
+									 + "WHERE ID = ?");
+			st.setString(1, emp.getName());
+			st.setString(2, emp.getEmail());
+			st.setDate(3, new java.sql.Date(emp.getBirthDate().getTime()));
+			st.setDouble(4, emp.getBaseSalary());
+			st.setInt(5, emp.getDepartment().getId());
+			st.setInt(6, emp.getId());
+			
+			st.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new DbException (e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 
 	}
 

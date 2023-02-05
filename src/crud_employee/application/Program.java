@@ -26,16 +26,19 @@ public class Program {
 		List<Employee> empList = new ArrayList<>();
 		List<Department> depList = new ArrayList<>();
 		
-		System.out.println("\n=== Test department insert =======");
-		Department newDepartment = new Department(null, "Sales");
-		depDao.insert(newDepartment);
-		System.out.println("Inserted! New id: " + newDepartment.getId());
+		System.out.println("\n=== Test department update =======");
+		Department newDepartment = depDao.findById(8);
+		newDepartment.setName("Parties");
+		depDao.update(newDepartment);
+		System.out.println("Update completed");
 		System.out.println();
 		
-		System.out.println("\n=== Test employee insert =======");
-		Employee newEmployee = new Employee(null, "Darth Vader", "darth@gmail.com", new Date(), 4000.00, newDepartment);
-		empDao.insert(newEmployee);
-		System.out.println("Inserted! New id: " + newEmployee.getId());
+		System.out.println("\n=== Test employee update =======");
+		Employee newEmployee = empDao.findById(21);
+		newEmployee.setName("Anakyn Skywalker");
+		newEmployee.setBaseSalary(4500.00);
+		empDao.update(newEmployee);
+		System.out.println("Update completed");
 
 		
 		sc.close();
