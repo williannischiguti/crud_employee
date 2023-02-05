@@ -26,19 +26,17 @@ public class Program {
 		List<Employee> empList = new ArrayList<>();
 		List<Department> depList = new ArrayList<>();
 		
-		System.out.println("\n=== Test department update =======");
-		Department newDepartment = depDao.findById(8);
-		newDepartment.setName("Parties");
-		depDao.update(newDepartment);
-		System.out.println("Update completed");
+		System.out.println("\n=== Test employee delete =======");
+		empDao.deleteById(21);
+		System.out.println("Delete completed");
+		
+		System.out.println("\n=== Test department delete =======");
+
+		depDao.deleteById(8);
+		System.out.println("Delete completed");
 		System.out.println();
 		
-		System.out.println("\n=== Test employee update =======");
-		Employee newEmployee = empDao.findById(21);
-		newEmployee.setName("Anakyn Skywalker");
-		newEmployee.setBaseSalary(4500.00);
-		empDao.update(newEmployee);
-		System.out.println("Update completed");
+
 
 		
 		sc.close();

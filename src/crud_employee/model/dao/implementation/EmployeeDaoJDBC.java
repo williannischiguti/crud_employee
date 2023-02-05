@@ -146,7 +146,7 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 		PreparedStatement st = null;
 		
 		try {
-			st = conn.prepareStatement("INSERT INTO EMPLOYEE (Name, Email, BirthDate, BaseSalary, DepartmentId) "
+			st = conn.prepareStatement("INSERT INTO EMPLOYEE (NAME, EMAIL, BIRTHDATE, BASESALARY, DEPARTMENTID) "
 									 + "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			st.setString(1, emp.getName());
 			st.setString(2, emp.getEmail());
@@ -204,7 +204,24 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement("DELETE FROM EMPLOYEE WHERE ID = ?");
+			st.setInt(1, id);
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected == 0) {
+				throw new DbException ("This Id number does not exist");
+			}
+			
+		} catch (SQLException e) {
+			throw new DbException (e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 
 	}
 
