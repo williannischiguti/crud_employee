@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import crud_employee.db.DB;
 import crud_employee.db.DbException;
 import crud_employee.model.dao.EmployeeDao;
 import crud_employee.model.entities.Department;
@@ -140,7 +142,37 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 
 	@Override
 	public void insert(Employee emp) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement("INSERT INTO EMPLOYEE (Name, Email, BirthDate, BaseSalary, DepartmentId) "
+									 + "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			st.setString(1, emp.getName());
+			st.setString(2, emp.getEmail());
+			st.setDate(3, new java.sql.Date(emp.getBirthDate().getTime()));
+			st.setDouble(4, emp.getBaseSalary());
+			st.setInt(5, emp.getDepartment().getId());
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				
+				if (rs.next()) {
+					emp.setId(rs.getInt(1));
+				}
+				DB.closeResultSet(rs);
+			} else {
+				throw new DbException("Unexpected error! No rows affected");
+			}
+			
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 
 	}
 

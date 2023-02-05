@@ -1,6 +1,7 @@
 package crud_employee.application;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -10,6 +11,7 @@ import crud_employee.model.dao.DepartmentDao;
 import crud_employee.model.dao.EmployeeDao;
 import crud_employee.model.entities.Department;
 import crud_employee.model.entities.Employee;
+
 
 public class Program {
 
@@ -24,14 +26,16 @@ public class Program {
 		List<Employee> empList = new ArrayList<>();
 		List<Department> depList = new ArrayList<>();
 		
-		Department dep = new Department(7, null);
-		empList = empDao.findByDepartment(dep);
+		System.out.println("\n=== Test department insert =======");
+		Department newDepartment = new Department(null, "Sales");
+		depDao.insert(newDepartment);
+		System.out.println("Inserted! New id: " + newDepartment.getId());
+		System.out.println();
 		
-		for (Employee emp : empList) {
-			System.out.println(emp);
-		}
-		
-
+		System.out.println("\n=== Test employee insert =======");
+		Employee newEmployee = new Employee(null, "Darth Vader", "darth@gmail.com", new Date(), 4000.00, newDepartment);
+		empDao.insert(newEmployee);
+		System.out.println("Inserted! New id: " + newEmployee.getId());
 
 		
 		sc.close();
