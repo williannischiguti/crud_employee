@@ -24,23 +24,21 @@ public class Program {
 		List<Employee> empList = new ArrayList<>();
 		List<Department> depList = new ArrayList<>();
 		
-		System.out.println("Testing findAll()");
-		empList = empDao.findAll();
-		depList = depDao.findAll();
+		
+		
+		System.out.println("Testing findById()");
+		Employee emp = empDao.findById(1);
+		Department dep = depDao.findById(7);
+
+		System.out.println("Employee");
+		System.out.println(emp);
 		System.out.println();
 		
-		System.out.println("Employees:");
-		for (Employee emp : empList) {
-			System.out.println(emp);
-		}
-		System.out.println();
+		System.out.println("Department");
+		System.out.println(dep);
 		
-		System.out.println("Departments:");
-		for (Department dep : depList) {
-			System.out.println(dep);
-		}
-		
-		
+
+
 		
 		sc.close();
 

@@ -97,7 +97,7 @@ public class Employee implements Serializable{
 	@Override
 	public String toString() {
 		return String.format("Id: %d | Name: %s | E-mail: %s | Birth date: %s | "
-							+ "Base Salary: %.2f | Department: Id = %d | Name: = %s"
+							+ "Base Salary: %.2f | Department: %d - %s"
 							, id, name, email, birthDate, baseSalary, department.getId(), department.getName());
 	}
 	

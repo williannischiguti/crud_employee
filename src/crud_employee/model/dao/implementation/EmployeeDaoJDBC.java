@@ -23,6 +23,7 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 	}
 
 	private Employee instantiateEmployee(ResultSet rs, Department dep) throws SQLException {
+		
 		Employee emp = new Employee();
 		emp.setId(rs.getInt("Id"));
 		emp.setName(rs.getString("Name"));
@@ -79,8 +80,27 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 	
 	@Override
 	public Employee findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			st = conn.prepareStatement("SELECT EMPLOYEE.*, DEPARTMENT.NAME AS Department FROM EMPLOYEE "
+									 + "INNER JOIN DEPARTMENT ON EMPLOYEE.DEPARTMENTID = DEPARTMENT.ID "
+									 + "WHERE EMPLOYEE.ID = ?");
+			st.setInt(1, id);
+			rs = st.executeQuery();
+			
+			if (rs.next()) {
+				Department dep = instantiateDepartment(rs);
+				Employee emp = instantiateEmployee(rs, dep);
+				return emp;
+			}
+			return null;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 	}
 
 	@Override
