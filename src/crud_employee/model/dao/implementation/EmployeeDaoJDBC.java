@@ -17,13 +17,13 @@ import crud_employee.model.entities.Employee;
 public class EmployeeDaoJDBC implements EmployeeDao {
 
 	private Connection conn;
-	
+
 	public EmployeeDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
 
 	private Employee instantiateEmployee(ResultSet rs, Department dep) throws SQLException {
-		
+
 		Employee emp = new Employee();
 		emp.setId(rs.getInt("Id"));
 		emp.setName(rs.getString("Name"));
@@ -31,67 +31,65 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 		emp.setBirthDate(rs.getDate("BirthDate"));
 		emp.setBaseSalary(rs.getDouble("BaseSalary"));
 		emp.setDepartment(dep);
-		
+
 		return emp;
 	}
-	
+
 	private Department instantiateDepartment(ResultSet rs) throws SQLException {
-		
+
 		Department dep = new Department();
 		dep.setId(rs.getInt("DepartmentId"));
 		dep.setName(rs.getString("Department"));
-		
+
 		return dep;
 	}
-	
+
 	@Override
 	public List<Employee> findAll() {
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		try {
 			st = conn.prepareStatement("SELECT EMPLOYEE.*, DEPARTMENT.NAME AS Department FROM EMPLOYEE "
-									 + "INNER JOIN DEPARTMENT ON EMPLOYEE.DEPARTMENTID = DEPARTMENT.ID "
-									 + "ORDER BY NAME");
+					+ "INNER JOIN DEPARTMENT ON EMPLOYEE.DEPARTMENTID = DEPARTMENT.ID " + "ORDER BY NAME");
 			rs = st.executeQuery();
 			List<Employee> list = new ArrayList<>();
 			Map<Integer, Department> map = new HashMap<>();
-			
+
 			while (rs.next()) {
-				
+
 				Department dep = map.get(rs.getInt("DepartmentId"));
-				
+
 				if (dep == null) {
 					dep = instantiateDepartment(rs);
 					map.put(rs.getInt("DepartmentId"), dep);
 				}
-				
+
 				Employee emp = instantiateEmployee(rs, dep);
 				list.add(emp);
 			}
-			
+
 			return list;
-			
+
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		}
 	}
-	
+
 	@Override
 	public Employee findById(Integer id) {
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		try {
-			
+
 			st = conn.prepareStatement("SELECT EMPLOYEE.*, DEPARTMENT.NAME AS Department FROM EMPLOYEE "
-									 + "INNER JOIN DEPARTMENT ON EMPLOYEE.DEPARTMENTID = DEPARTMENT.ID "
-									 + "WHERE EMPLOYEE.ID = ?");
+					+ "INNER JOIN DEPARTMENT ON EMPLOYEE.DEPARTMENTID = DEPARTMENT.ID " + "WHERE EMPLOYEE.ID = ?");
 			st.setInt(1, id);
 			rs = st.executeQuery();
-			
+
 			if (rs.next()) {
 				Department dep = instantiateDepartment(rs);
 				Employee emp = instantiateEmployee(rs, dep);
@@ -104,27 +102,58 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 	}
 
 	@Override
-	public List<Employee> findByDepartment(Department dep) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Employee> findByDepartment(Department department) {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement("SELECT EMPLOYEE.*, DEPARTMENT.NAME AS Department FROM EMPLOYEE "
+					+ "INNER JOIN DEPARTMENT ON EMPLOYEE.DEPARTMENTID = DEPARTMENT.ID "
+					+ "WHERE DEPARTMENTID = ? ORDER BY NAME");
+			st.setInt(1, department.getId());
+			rs = st.executeQuery();
+
+			List<Employee> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+
+			while (rs.next()) {
+
+				Department dep = map.get(rs.getInt("DepartmentId"));
+
+				if (dep == null) {
+					dep = instantiateDepartment(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
+				}
+				Employee emp = instantiateEmployee(rs, dep);
+				list.add(emp);
+
+			}
+
+			return list;
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+
 	}
-	
+
 	@Override
 	public void insert(Employee emp) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void update(Employee emp) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteById(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

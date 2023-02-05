@@ -24,18 +24,12 @@ public class Program {
 		List<Employee> empList = new ArrayList<>();
 		List<Department> depList = new ArrayList<>();
 		
+		Department dep = new Department(7, null);
+		empList = empDao.findByDepartment(dep);
 		
-		
-		System.out.println("Testing findById()");
-		Employee emp = empDao.findById(1);
-		Department dep = depDao.findById(7);
-
-		System.out.println("Employee");
-		System.out.println(emp);
-		System.out.println();
-		
-		System.out.println("Department");
-		System.out.println(dep);
+		for (Employee emp : empList) {
+			System.out.println(emp);
+		}
 		
 
 
